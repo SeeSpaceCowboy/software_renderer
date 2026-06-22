@@ -58,16 +58,16 @@ void Drawer::lineBrezenham(glm::vec2 from, glm::vec2 to, TGAColor color) {
         }
     }
 }
-void Drawer::drawTriangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, TGAColor color) {
+void Drawer::drawTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, TGAColor color) {
     if (a.y > b.y) std::swap(a, b);
     if (a.y > c.y) std::swap(a, c);
     if (b.y > c.y) std::swap(b, c);
 
     bool half;
-    int seg_height;
+    int seg_height, idx;
     int total_height = c.y - a.y;
-    float alpha, beta;
-    glm::vec2 A, B;
+    float alpha, beta, phi;
+    glm::vec3 A, B, P;
 
     for (int i = 0; i < total_height; ++i) {
         half = i > b.y - a.y || b.y == a.y;
@@ -81,7 +81,13 @@ void Drawer::drawTriangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, TGAColor color)
 
         if (A.x > B.x) std::swap(A, B);
         for (int j = A.x; j <= B.x; ++j) {
-            plane.set(j, a.y + i, color);
+            phi = ((B.x == A.x) ? (1.) : (float)(j - A.x) / (B.x - A.x));
+            P = A + (B - A) * phi;
+            idx = P.x + P.y * width;
+            if (z_buffer[idx] < P.z) {
+                z_buffer[idx] = P.z;
+                plane.set(P.x, P.y, color);
+            }
         }
     }
 }
@@ -107,15 +113,16 @@ void Drawer::drawModel(Model* m, TGAColor color) {
     glm::vec3 n;
     glm::vec3 light = glm::normalize(glm::vec3(1, 0, -1));
     glm::vec3 world_coords[3];
-    glm::uvec2 screen_coords[3];
+    glm::uvec3 screen_coords[3];
     std::vector<int> face;
 
     for (int i = 0; i < m->nfaces(); ++i) {
         face = m->face(i);
         for (int j = 0; j < 3; ++j) {
             world_coords[j] = m->vert(face[j]);
-            screen_coords[j] = glm::vec2((world_coords[j].x + 1.) * width / 2.,
-                                        (world_coords[j].y + 1.) * height / 2.);
+            screen_coords[j] = glm::vec3((world_coords[j].x + 1.) * width / 2.,
+                                        (world_coords[j].y + 1.) * height / 2.,
+                                        (world_coords[j].z));
         }
 
         n = glm::cross(world_coords[2] - world_coords[0], world_coords[1] - world_coords[0]);

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     while (std::getline(in, filepath)) model.push_back(new Model(filepath));
     for (Model* m : model) {
         drawer.drawModel(m, white);
-        drawer.drawWireframe(m, gray);
+        // drawer.drawWireframe(m, gray);
     }
     return 0;
 }
