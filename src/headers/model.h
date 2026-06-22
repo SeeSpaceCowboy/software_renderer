@@ -9,7 +9,7 @@ private:
 	std::vector<glm::vec3> verts_;
 	std::vector<std::vector<int> > faces_;
 public:
-	Model(const char *filename);
+	Model(std::string filepath);
 
 	int nverts();
 	int nfaces();

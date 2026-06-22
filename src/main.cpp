@@ -1,7 +1,9 @@
 // #include <iostream>
+#include <glm/glm.hpp>
+#include <fstream>
+#include <string>
 #include <vector>
 #include <cmath>
-#include <glm/glm.hpp>
 
 #include "tgaimage.h"
 #include "model.h"
@@ -15,13 +17,23 @@ const TGAColor black = TGAColor(0x00, 0x00, 0x00, 0xFF);
 const TGAColor gray  = TGAColor(0x40, 0x40, 0x40, 0x40);
 const TGAColor red   = TGAColor(0xFF, 0x00, 0x00, 0xFF);
 
-Model* model = new Model("obj/african_head.obj");
-
 int main(int argc, char** argv) {
     Drawer drawer(width, height);
-    drawer.drawModel(model, white);
-    drawer.drawWireframe(model, gray);
-    delete model;
+
+    std::string filepath;
+    std::ifstream in("data/model_list.txt");
+    std::vector<Model*> model;
+
+    if (!in.is_open()) {
+        std::cerr << "Error: model_list.txt doesn't exist!";
+        return 1;
+    }
+    
+    while (std::getline(in, filepath)) model.push_back(new Model(filepath));
+    for (Model* m : model) {
+        drawer.drawModel(m, white);
+        drawer.drawWireframe(m, gray);
+    }
     return 0;
 }
 

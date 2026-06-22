@@ -7,9 +7,10 @@
 
 #include "model.h"
 
-Model::Model(const char *filename) : verts_(), faces_() {
+
+Model::Model(std::string filepath) : verts_(), faces_() {
     std::ifstream in;
-    in.open (filename, std::ifstream::in);
+    in.open (filepath, std::ifstream::in);
     if (in.fail()) return;
 
     std::string line;
@@ -38,7 +39,9 @@ Model::Model(const char *filename) : verts_(), faces_() {
             faces_.push_back(f);
         }
     }
-    std::cerr << "# v# " << verts_.size() << " f# "  << faces_.size() << std::endl;
+
+    std::cerr << filepath;
+    std::cerr << " {verticles: " << verts_.size() << "; faces: "  << faces_.size() << "}\n";
 }
 
 int Model::nverts() {

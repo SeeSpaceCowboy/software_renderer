@@ -5,6 +5,9 @@ Drawer::Drawer(int w, int h) {
 	width = w;
 	height = h;
 	z_buffer = new int[w * h];
+    for (int i = w * h - 1; i >= 0; --i) {
+        z_buffer[i] = INT32_MIN;
+    }
 	plane = TGAImage(w, h, TGAImage::RGB);
 }
 
@@ -55,7 +58,7 @@ void Drawer::lineBrezenham(glm::vec2 from, glm::vec2 to, TGAColor color) {
         }
     }
 }
-void Drawer::drawTriangle(glm::uvec2 a, glm::uvec2 b, glm::uvec2 c, TGAColor color) {
+void Drawer::drawTriangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, TGAColor color) {
     if (a.y > b.y) std::swap(a, b);
     if (a.y > c.y) std::swap(a, c);
     if (b.y > c.y) std::swap(b, c);
