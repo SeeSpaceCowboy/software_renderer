@@ -10,7 +10,7 @@ TGAImage::TGAImage() : data(NULL), width(0), height(0), bytespp(0) {
 }
 
 TGAImage::TGAImage(int w, int h, int bpp) : data(NULL), width(w), height(h), bytespp(bpp) {
-	unsigned long nbytes = width*height*bytespp;
+	unsigned long nbytes = width * height * bytespp;
 	data = new unsigned char[nbytes];
 	memset(data, 0, nbytes);
 }
@@ -19,7 +19,7 @@ TGAImage::TGAImage(const TGAImage &img) {
 	width = img.width;
 	height = img.height;
 	bytespp = img.bytespp;
-	unsigned long nbytes = width*height*bytespp;
+	unsigned long nbytes = width * height * bytespp;
 	data = new unsigned char[nbytes];
 	memcpy(data, img.data, nbytes);
 }
@@ -60,22 +60,22 @@ bool TGAImage::read_tga_file(const char *filename) {
 	}
 	width   = header.width;
 	height  = header.height;
-	bytespp = header.bitsperpixel>>3;
-	if (width<=0 || height<=0 || (bytespp!=GRAYSCALE && bytespp!=RGB && bytespp!=RGBA)) {
+	bytespp = header.bitsperpixel >> 3;
+	if (width <= 0 || height <= 0 || (bytespp != GRAYSCALE && bytespp != RGB && bytespp != RGBA)) {
 		in.close();
 		std::cerr << "bad bpp (or width/height) value\n";
 		return false;
 	}
-	unsigned long nbytes = bytespp*width*height;
+	unsigned long nbytes = bytespp * width * height;
 	data = new unsigned char[nbytes];
-	if (3==header.datatypecode || 2==header.datatypecode) {
+	if (3 == header.datatypecode || 2 == header.datatypecode) {
 		in.read((char *)data, nbytes);
 		if (!in.good()) {
 			in.close();
 			std::cerr << "an error occured while reading the data\n";
 			return false;
 		}
-	} else if (10==header.datatypecode||11==header.datatypecode) {
+	} else if (10 == header.datatypecode || 11 == header.datatypecode) {
 		if (!load_rle_data(in)) {
 			in.close();
 			std::cerr << "an error occured while reading the data\n";

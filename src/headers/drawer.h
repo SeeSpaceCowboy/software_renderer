@@ -18,7 +18,7 @@ public:
     ~Drawer();
 
     void lineBrezenham(glm::vec2 from, glm::vec2 to, TGAColor color);
-    void drawTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, TGAColor color);
+    void drawTriangle(Model* m, glm::vec3 dot[3], glm::vec2 uv[3], float intensity);
 
     void drawWireframe(Model* m, TGAColor color);
     void drawModel(Model* m, TGAColor color);
